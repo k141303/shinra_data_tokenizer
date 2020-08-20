@@ -9,9 +9,12 @@
 
 現状対応しているトーカナイザーは以下の通りです。
 
-- `mecab_ipadic`:MeCab IPA辞書
-- `mecab_jumandic`:MeCab juman辞書
-- `jumanpp`:Juman++(v2.0.0-rc2)
+- `mecab_ipadic`:MeCab IPA辞書※1
+- `mecab_jumandic`:MeCab juman辞書※1 => [NICT bert BPE無し](https://alaginrc.nict.go.jp/nict-bert/index.html)に対応しています。※2
+- `jumanpp`:Juman++(v2.0.0-rc2)※1
+
+※1:半角を全角に正規化  
+※2:語彙idは再度振り直す必要があります。
 
 ## 実行方法
 
