@@ -34,7 +34,7 @@ def tokenize(inputs):
     for page_id, file_path, annotation in chunks:
         text = DataUtils.load_file(file_path)
 
-        text = mojimoji.han_to_zen(text) # 全角に正規化(pyknpは半角記号に弱いため)
+        text = mojimoji.han_to_zen(text) # 全角に正規化
 
         tokenized_sentences = []
         for line in text.split("\n"):

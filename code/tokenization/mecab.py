@@ -11,6 +11,11 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("指定したトーカナイザーにはmecab-python3が必要です。\n$ pip install mecab-python3")
 
+try:
+    import mojimoji
+except ModuleNotFoundError:
+    raise ModuleNotFoundError("指定したトーカナイザーにはmojimojiが必要です。\n$ pip install mojimoji")
+
 from data_utils import DataUtils, DataTools
 from tokenization.vocab_utils import count_vocab
 from tokenization.annotation_utils import annotation_mapper
@@ -37,6 +42,8 @@ def tokenize(inputs):
     tokenized_documents = []
     for page_id, file_path, annotation in chunks:
         text = DataUtils.load_file(file_path)
+
+        text = mojimoji.han_to_zen(text) # 全角に正規化
 
         tokenized_sentences = []
         for line in text.split("\n"):
