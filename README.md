@@ -37,6 +37,8 @@ python3 code/main.py \
     --parallel -1 # 並列コア数(-1の場合は最大)
 ~~~
 
+使用したいトークナイザーを`--tokenizer`に指定してください。
+
 ## 出力ファイルの見方
 
 例えば、`mecab_ipadic`で`JP-5`を処理した場合、`Airport`カテゴリーは以下の様に書き出されます。  
