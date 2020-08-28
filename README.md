@@ -56,13 +56,13 @@ python3 code/main.py \
 ### ・(カテゴリー名)_dist.json
 
 ~~~
-{"page_id": "3407002", "title": "ラジャ・ハジ・フィサビッリラー空港", "attribute": "別名", "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 67, "offset": 14}, "end": {"line_id": 67, "offset": 18}, "text": "Raja Haji Fisabilillah Airport"}}
-{"page_id": "3407002", "title": "ラジャ・ハジ・フィサビッリラー空港", "attribute": "別名", "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 34, "offset": 8}, "end": {"line_id": 34, "offset": 13}, "text": "Raja Haji Fisabilillah International Airport"}}
+{"page_id": "3507880", "title": "アンパーラ空港", "attribute": "別名", "html_offset": {"start": {"line_id": 39, "offset": 395}, "end": {"line_id": 39, "offset": 406}, "text": "SLAF Ampara"}, "text_offset": {"start": {"line_id": 39, "offset": 61}, "end": {"line_id": 39, "offset": 72}, "text": "SLAF Ampara"}, "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 39, "offset": 7}, "end": {"line_id": 39, "offset": 9}, "text": "SLAF Ampara"}}
+{"page_id": "3507880", "title": "アンパーラ空港", "attribute": "別名", "html_offset": {"start": {"line_id": 70, "offset": 375}, "end": {"line_id": 70, "offset": 389}, "text": "Ampara Airport"}, "text_offset": {"start": {"line_id": 70, "offset": 76}, "end": {"line_id": 70, "offset": 90}, "text": "Ampara Airport"}, "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 70, "offset": 23}, "end": {"line_id": 70, "offset": 25}, "text": "Ampara Airport"}}
 ...
 ~~~
 
 配布されている学習データと同じ形式です。  
-`offset`の値が各トークンの(開始|終了)インデックスになっています。
+`token_offset`->`offset`の値が各トークンの(開始|終了)インデックスになっています。
 
 ### ・vocab.txt
 
