@@ -1,4 +1,4 @@
-# shinra_data_tokenizer
+# 森羅データセットトークナイザー
 
 事前トークナイズ済みデータセットを作成するためのスクリプトです。  
 以下の機能を持たせました。  
@@ -10,11 +10,8 @@
 現状対応しているトーカナイザーは以下の通りです。
 
 - `mecab_ipadic`:MeCab IPA辞書※1
-- `mecab_jumandic`:MeCab juman辞書※1 => [NICT BERT BPE無し](https://alaginrc.nict.go.jp/nict-bert/index.html)に対応しています。※2
-- `jumanpp`:Juman++(v2.0.0-rc2)※1
 
 ※1:半角を全角に正規化  
-※2:語彙idは再度振り直す必要があります。
 
 ## 実行方法
 
@@ -57,13 +54,13 @@ python3 code/main.py \
 ### ・(カテゴリー名)_dist.json
 
 ~~~
-{"page_id": "3407002", "title": "ラジャ・ハジ・フィサビッリラー空港", "attribute": "別名", "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 67, "offset": 14}, "end": {"line_id": 67, "offset": 18}, "text": "Raja Haji Fisabilillah Airport"}}
-{"page_id": "3407002", "title": "ラジャ・ハジ・フィサビッリラー空港", "attribute": "別名", "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 34, "offset": 8}, "end": {"line_id": 34, "offset": 13}, "text": "Raja Haji Fisabilillah International Airport"}}
+{"page_id": "3507880", "title": "アンパーラ空港", "attribute": "別名", "html_offset": {"start": {"line_id": 39, "offset": 395}, "end": {"line_id": 39, "offset": 406}, "text": "SLAF Ampara"}, "text_offset": {"start": {"line_id": 39, "offset": 61}, "end": {"line_id": 39, "offset": 72}, "text": "SLAF Ampara"}, "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 39, "offset": 7}, "end": {"line_id": 39, "offset": 9}, "text": "SLAF Ampara"}}
+{"page_id": "3507880", "title": "アンパーラ空港", "attribute": "別名", "html_offset": {"start": {"line_id": 70, "offset": 375}, "end": {"line_id": 70, "offset": 389}, "text": "Ampara Airport"}, "text_offset": {"start": {"line_id": 70, "offset": 76}, "end": {"line_id": 70, "offset": 90}, "text": "Ampara Airport"}, "ENE": "1.6.5.3", "token_offset": {"start": {"line_id": 70, "offset": 23}, "end": {"line_id": 70, "offset": 25}, "text": "Ampara Airport"}}
 ...
 ~~~
 
 配布されている学習データと同じ形式です。  
-`offset`の値が各トークンの(開始|終了)インデックスになっています。
+`token_offset`->`offset`の値が各トークンの(開始|終了)インデックスになっています。
 
 ### ・vocab.txt
 
@@ -98,3 +95,15 @@ python3 code/main.py \
 語彙idは`vocab.txt`の語彙と対応しています(語彙idは0始まりです。つまり`717`の場合`vocab.txt`の`718`行目の語彙を示しています。)。  
 開始オフセット、終了オフセットはそれぞれ元のテキストでのオフセットを示しています。  
 各行は元のテキストの行と対応していますので、`line_id`は元データと同様に取得できます。
+
+## 補足等
+
+学習データでのオフセットが必ずしもトークンの境目と一致するとは限りません。
+そのため、トークンの間にオフセットが存在した場合は、そのトークンも含む様に`token_offset`->`offset`が決定されます。
+(つまりプレーンテキスト上でより長い範囲が選択される様決定されます。)
+
+アノテーションの左右もしくは両方がトークンへのマッピングによりずれた割合は次の様になります。
+
+|トークナイザー|ズレ率|
+|:---|---:|
+|MeCab IPA辞書|1.21%|
