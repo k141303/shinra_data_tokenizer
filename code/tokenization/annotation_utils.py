@@ -2,7 +2,7 @@ from multiprocessing import Pool
 
 from data_utils import DataTools, DataUtils
 
-def annotation_mapper(annotation, tokenized_sentences, ann_key="token"):
+def annotation_mapper(annotation, tokenized_sentences, ann_key="token", patch={}):
     """
     オフセットを各トークンにマップします。
     """
@@ -29,6 +29,9 @@ def annotation_mapper(annotation, tokenized_sentences, ann_key="token"):
                     match_error = True
                 break
 
+        assert ann["token_offset"]["start"].get("offset") is not None, \
+            f"Startオフセットマッチエラー\ntokens:{tokens}\nann:{ann['text_offset']}"
+
         tokens = tokenized_sentences[end["line_id"]]
         for i, (token, s, e) in enumerate(tokens):
             if end["offset"] > s and end["offset"] <= e:
@@ -37,13 +40,14 @@ def annotation_mapper(annotation, tokenized_sentences, ann_key="token"):
                     match_error = True
                 break
 
-        assert ann["token_offset"]["start"].get("offset") is not None, \
-            f"Startオフセットマッチエラー\ntokens:{tokens}\nann:{ann['text_offset']}"
-        assert ann["token_offset"]["end"].get("offset") is not None, \
-            f"Endオフセットマッチエラー\ntokens:{tokens}\nann:{ann['text_offset']}"
+        if ann["token_offset"]["end"].get("offset") is None:
+            key=(int(ann["page_id"]), ann["attribute"], ann["text_offset"]["end"]["line_id"], ann["text_offset"]["end"]["offset"])
+            ann["token_offset"]["end"]["offset"] = patch.get(key)
 
-        del ann["text_offset"]
-        del ann["html_offset"]
+        assert ann["token_offset"]["end"].get("offset") is not None, f"Endオフセットマッチエラー\n{ann}\ntokens:{tokens}\nann:{ann['text_offset']}"
+
+        #del ann["text_offset"]
+        #del ann["html_offset"]
 
         match_errors += match_error
 
@@ -62,8 +66,6 @@ def check_annotation(inputs):
             offsets = [*map(int, offsets)]
 
             assert False, end_offsets
-
-
 
 def annotation_checker(args, shinra, tokenized_shinra, num_jobs=100):
     for category in tokenized_shinra.categories:

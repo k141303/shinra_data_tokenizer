@@ -20,6 +20,10 @@ from data_utils import DataUtils, DataTools
 from tokenization.vocab_utils import count_vocab
 from tokenization.annotation_utils import annotation_mapper
 
+JUMANDIC_PATCH={
+    (871146, 'メンバー', 84, 17):8
+}
+
 def get_mecab_dic_dir(mecab_dic):
     if mecab_dic == "ipadic":
         mecab_dic_dir = os.environ.get("MECAB_IPADIC_DIR")
@@ -32,8 +36,13 @@ def get_mecab_dic_dir(mecab_dic):
 
     assert False, "開発者側の意図せぬ挙動です。"
 
+def get_patch(mecab_dic):
+    if mecab_dic == "jumandic":
+        return JUMANDIC_PATCH
+    return {}
+
 def tokenize(inputs):
-    temp_path, mecab_dic_dir, chunks = inputs
+    temp_path, mecab_dic_dir, chunks, patch = inputs
 
     parser = MeCab.Tagger(f"-Owakati -d {mecab_dic_dir}")
 
@@ -97,7 +106,8 @@ def tokenize(inputs):
             # アノテーションを各トークンにマップ
             mapped_annotation[page_id], match_errors = annotation_mapper(
                 annotation,
-                tokenized_sentences
+                tokenized_sentences,
+                patch=patch
             )
             errors["total_annotation"] += len(annotation)
             errors["match"] += match_errors
@@ -129,6 +139,8 @@ def run_tokenize(args, shinra, mecab_dic, num_jobs=100):
             t.update(num_jobs*3)
             continue
 
+        t.set_description(category)
+
         # 並列処理のためにジョブ分割
         targets = []
         for page_id, plain_path in shinra.plain_paths[category].items():
@@ -138,7 +150,7 @@ def run_tokenize(args, shinra, mecab_dic, num_jobs=100):
                 shinra.annotations[category].get(page_id),
             ))
         jobs = DataTools.split_array(targets, num_jobs)
-        jobs = [(os.path.join(temp_dir, f"{job_id}.json"), mecab_dic_dir, job) for job_id, job in enumerate(jobs)]
+        jobs = [(os.path.join(temp_dir, f"{job_id}.json"), mecab_dic_dir, job, get_patch(mecab_dic)) for job_id, job in enumerate(jobs)]
 
         # トークナイズ
         total_mapped_annotation, temp_paths = {}, []
