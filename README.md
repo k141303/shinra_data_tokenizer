@@ -10,8 +10,12 @@
 現状対応しているトーカナイザーは以下の通りです。
 
 - `mecab_ipadic`:MeCab IPA辞書※1
+- `mecab_jumandic`:MeCab Juman辞書*1
+- `Jumanpp`:Juman++ *1*2
+- `kurohashi_bert`:Juman++ & BPE [黒橋研BERT](http://nlp.ist.i.kyoto-u.ac.jp/index.php?BERT%E6%97%A5%E6%9C%AC%E8%AA%9EPretrained%E3%83%A2%E3%83%87%E3%83%AB)対応版 *1
 
 ※1:半角を全角に正規化  
+*2:公開データは`Version: 2.0.0-rc2 / Dictionary: 20180202-2cca748 / LM: K:20180217-6c28641 L:20180221-fd8a4b63 F:20171214-9d125cb`
 
 ## 実行方法
 
@@ -77,7 +81,13 @@ python3 code/main.py \
 
 語彙ファイルです。  
 主にデータサイズを圧縮するために使用しています。  
-カテゴリーごとに集計されていることに注意してください。
+カテゴリーごとに集計されています。
+`kurohashi_bert`では[黒橋研BERT](http://nlp.ist.i.kyoto-u.ac.jp/index.php?BERT%E6%97%A5%E6%9C%AC%E8%AA%9EPretrained%E3%83%A2%E3%83%87%E3%83%AB)の語彙ファイルを代わりに使用しています。
+
+>note
+>
+>語彙ファイルの改行記号は`\n`です。
+>Pythonの場合は`split("\n")`で分割してください。
 
 ### ・(page_id).txt
 
