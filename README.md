@@ -9,8 +9,8 @@
 
 現状対応しているトーカナイザーは以下の通りです。
 
-- `mecab_ipadic`:MeCab IPA辞書※1
-- `mecab_jumandic`:MeCab Juman辞書*1
+- `mecab_ipadic`:MeCab IPA辞書 ※1
+- `mecab_jumandic`:MeCab Juman辞書 [NICT BERT(BPE無し)](https://alaginrc.nict.go.jp/nict-bert/index.html)対応 *1
 - `Jumanpp`:Juman++ *1*2
 - `kurohashi_bert`:Juman++ & BPE [黒橋研BERT](http://nlp.ist.i.kyoto-u.ac.jp/index.php?BERT%E6%97%A5%E6%9C%AC%E8%AA%9EPretrained%E3%83%A2%E3%83%87%E3%83%AB)対応版 *1
 
