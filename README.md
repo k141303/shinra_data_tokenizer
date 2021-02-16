@@ -13,6 +13,7 @@
 - `mecab_jumandic`:MeCab Juman辞書 [NICT BERT(BPE無し)](https://alaginrc.nict.go.jp/nict-bert/index.html)対応 \*1
 - `Jumanpp`:Juman++ \*1\*2
 - `kurohashi_bert`:Juman++ & BPE [黒橋研BERT](http://nlp.ist.i.kyoto-u.ac.jp/index.php?BERT%E6%97%A5%E6%9C%AC%E8%AA%9EPretrained%E3%83%A2%E3%83%87%E3%83%AB)対応版 \*1
+- `tohoku_bert_mecab_ipadic_bpe`: MeCab IPA辞書 & BPE [東北大BERT（cl-tohoku/bert-base-japanese）](https://huggingface.co/transformers/pretrained_models.html)対応版
 
 \※1:半角を全角に正規化  
 \*2:公開データは`Version: 2.0.0-rc2 / Dictionary: 20180202-2cca748 / LM: K:20180217-6c28641 L:20180221-fd8a4b63 F:20171214-9d125cb`
