@@ -4,6 +4,7 @@ import unicodedata
 from collections import Counter
 from multiprocessing import Pool
 
+import MeCab
 import tqdm
 
 try:
@@ -12,11 +13,26 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError("指定したトーカナイザーにはtorchが必要です.")
 
 from data_utils import DataTools, DataUtils
-
 from tokenization.annotation_utils import annotation_mapper
 from tokenization.vocab_utils import count_vocab
 
 JUMANDIC_PATCH = {(871146, "メンバー", 84, 17): 8}
+
+
+class MyMeCab(object):
+    def __init__(self, mecab, text=""):
+        self.mecab = mecab
+        self.text = text
+
+    def __call__(self, text):
+        self.text = text
+        return self
+
+    def __iter__(self):
+        node = self.mecab.parseToNode(self.text)
+        while node:
+            yield node
+            node = node.next
 
 
 def replace_unk(tokens, subwords):
@@ -132,6 +148,8 @@ def replace_subword_prefix(token_list, word_tokens):
 
 def tokenize_sent(line, basic_tokenizer, wordpiece_tokenizer):
     tokens = basic_tokenizer.tokenize(line)
+    assert len(tokens) > 0
+
     tokens = [re.sub("\s", "", t) for t in tokens]
     subwords = [wordpiece_tokenizer.tokenize(t) for t in tokens]
     flatten_subwords = [s for sub in subwords for s in sub]
@@ -214,10 +232,12 @@ def tokenize_sent(line, basic_tokenizer, wordpiece_tokenizer):
 
 def tokenize(inputs):
     temp_path, chunks, patch = inputs
+    mecab = MeCab.Tagger("-d /opt/mecab/lib/mecab/dic/ipadic")
 
     basic_tokenizer = BertJapaneseTokenizer.from_pretrained(
         "cl-tohoku/bert-base-japanese", do_subword_tokenize=False
     )
+    basic_tokenizer.word_tokenizer.mecab = MyMeCab(mecab)
     wordpiece_tokenizer = BertJapaneseTokenizer.from_pretrained(
         "cl-tohoku/bert-base-japanese", do_word_tokenize=False
     )
@@ -234,7 +254,14 @@ def tokenize(inputs):
                 tokenized_sentences.append([])
                 continue
 
-            tokens, offsets = tokenize_sent(line, basic_tokenizer, wordpiece_tokenizer)
+            try:
+                tokens, offsets = tokenize_sent(
+                    line, basic_tokenizer, wordpiece_tokenizer
+                )
+            except:
+                tokenized_sentences.append([])
+                errors["mecab"] += 1
+                continue
 
             starts, ends = zip(*offsets)
             tokenized_sentences.append([*zip(tokens, starts, ends)])
